@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Telegram";
+}
+
+<body>
+<div class="text-center">
+    <h1 class="display-4">Telegram Config</h1>
+</div>
+
+<p>
+    <a asp-action="SendAuthCode" class="btn btn-primary">Send Authentication Code</a>
+</p>
+
+<form asp-action="Index">
+    <p>
+        Authentication Code : <input type="text" name="authenticationCode">
+        <input type="submit" value="Check"/>
+    </p>
+    <p>
+        @ViewData["ErrorMessage"]
+    </p>
+</form>
+
+
+<p>
+    <a asp-action="CheckLoopCount" class="btn btn-primary">Check Loop Count</a>
+</p>
+<p>
+    <a asp-action="StartThread" class="btn btn-primary">Srart Thread</a>
+</p>
+<p>
+    <a asp-action="StopThread" class="btn btn-primary">Stop Thread</a>
+</p>
+
+</body>
