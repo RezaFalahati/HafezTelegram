@@ -35,7 +35,7 @@ namespace HafezTelegram.DataSource
             _logger = logger;
         }
 
-        private async void StartTelegram()
+        private async Task StartTelegram()
         {
             try
             {
@@ -80,7 +80,7 @@ namespace HafezTelegram.DataSource
             }
         }
 
-        private async void CheckGoldChannelMessage(TdApi.Message message)
+        private void CheckGoldChannelMessage(TdApi.Message message)
         {
             try
             {
@@ -98,13 +98,13 @@ namespace HafezTelegram.DataSource
                     Price = price
                 };
                 var goldOptionsBuilder = new DbContextOptionsBuilder<TomorrowMeltedGoldContext>();
-                goldOptionsBuilder.UseSqlServer(_connectionString);
-                await using var goldContext =
+                goldOptionsBuilder.UseSqlServer(_connectionString); 
+                using var goldContext =
                     new TomorrowMeltedGoldContext(goldOptionsBuilder.Options);
-                if (await goldContext.TomorrowMeltedGold.AnyAsync(item =>
+                if (goldContext.TomorrowMeltedGold.Any(item =>
                     item.MessageId == tomorrowMeltedGold.MessageId)) return;
-                goldContext.Add(tomorrowMeltedGold);
-                await goldContext.SaveChangesAsync();
+                goldContext.Add(tomorrowMeltedGold); 
+                goldContext.SaveChanges();
                 //DataReceiveHelper.Information.AppendLine("New Gold Message Added");
             }
             catch (TdException e)
@@ -118,7 +118,7 @@ namespace HafezTelegram.DataSource
             }
         }
 
-        private async void CheckDollarChannelMessage(TdApi.Message message)
+        private void CheckDollarChannelMessage(TdApi.Message message)
         {
             try
             {
@@ -137,12 +137,12 @@ namespace HafezTelegram.DataSource
                 };
 
                 var dollarOptionsBuilder = new DbContextOptionsBuilder<TomorrowHeratDollarContext>();
-                dollarOptionsBuilder.UseSqlServer(_connectionString);
-                await using var dollarContext = new TomorrowHeratDollarContext(dollarOptionsBuilder.Options);
-                if (await dollarContext.TomorrowHeratDollar.AnyAsync(item =>
+                dollarOptionsBuilder.UseSqlServer(_connectionString); 
+                using var dollarContext = new TomorrowHeratDollarContext(dollarOptionsBuilder.Options);
+                if (dollarContext.TomorrowHeratDollar.Any(item =>
                     item.MessageId == tomorrowHeratDollar.MessageId)) return;
                 dollarContext.Add(tomorrowHeratDollar);
-                await dollarContext.SaveChangesAsync();
+                dollarContext.SaveChanges();
                 //DataReceiveHelper.Information.AppendLine("New Dollar Message Added");
             }
             catch (TdException e)
@@ -162,7 +162,7 @@ namespace HafezTelegram.DataSource
             //{
             //if (!DataReceiveHelper.IsAuthorised) break;
             //GetOldData();
-            StartTelegram();
+            await StartTelegram();
             //await Task.Delay(1000, stoppingToken);
             //}
         }
